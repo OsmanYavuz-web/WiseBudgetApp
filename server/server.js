@@ -4,6 +4,9 @@ import dotenv from 'dotenv';
 import sequelize, { testConnection, syncDatabase } from './config/database.js';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
 
+// Model imports - Tabloların oluşturulması için gerekli
+import './models/index.js';
+
 // Route imports
 import authRoutes from './routes/authRoutes.js';
 import accountRoutes from './routes/accountRoutes.js';
@@ -80,10 +83,9 @@ const startServer = async () => {
       process.exit(1);
     }
 
-    // Veritabanı tablolarını senkronize et (geliştirme ortamında)
-    if (process.env.NODE_ENV === 'development') {
-      await syncDatabase(false); // false = mevcut tabloları silme
-    }
+    // Veritabanı tablolarını senkronize et (geliştirme ortamında veya tablolar yoksa)
+    // force: false = mevcut tabloları silmez, sadece yoksa oluşturur
+    await syncDatabase(false);
 
     // Sunucuyu dinlemeye başla
     app.listen(PORT, () => {
