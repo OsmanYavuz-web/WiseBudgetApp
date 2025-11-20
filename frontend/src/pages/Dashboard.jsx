@@ -34,10 +34,10 @@ export default function Dashboard() {
     const fetchData = async () => {
       try {
         const [accountsRes, categoriesRes, transactionsRes, debtSummaryRes] = await Promise.all([
-          api.get('/accounts'),
-          api.get('/categories'),
-          api.get('/transactions?limit=10'),
-          api.get('/debts/summary')
+          api.get('/api/accounts'),
+          api.get('/api/categories'),
+          api.get('/api/transactions?limit=10'),
+          api.get('/api/debts/summary')
         ])
         setAccounts(accountsRes.data.data)
         setCategories(categoriesRes.data.data)
@@ -58,7 +58,7 @@ export default function Dashboard() {
     setValidationErrors({})
     
     try {
-      await api.post('/transactions', quickFormData)
+      await api.post('/api/transactions', quickFormData)
       toast.success('İşlem eklendi')
       setShowQuickAdd(false)
       setValidationErrors({})
@@ -73,8 +73,8 @@ export default function Dashboard() {
       
       // Verileri yeniden yükle
       const [accountsRes, transactionsRes] = await Promise.all([
-        api.get('/accounts'),
-        api.get('/transactions?limit=10')
+        api.get('/api/accounts'),
+        api.get('/api/transactions?limit=10')
       ])
       setAccounts(accountsRes.data.data)
       setRecentTransactions(transactionsRes.data.data)

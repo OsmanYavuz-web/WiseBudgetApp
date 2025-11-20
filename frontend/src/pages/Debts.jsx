@@ -38,8 +38,8 @@ export default function Debts() {
     try {
       const params = filterType !== 'all' ? `?type=${filterType}` : ''
       const [debtsRes, summaryRes] = await Promise.all([
-        api.get(`/debts${params}`),
-        api.get('/debts/summary')
+        api.get(`/api/debts${params}`),
+        api.get('/api/debts/summary')
       ])
       setDebts(debtsRes.data.data)
       setSummary(summaryRes.data.data)
@@ -64,10 +64,10 @@ export default function Debts() {
       }
 
       if (editingDebt) {
-        await api.put(`/debts/${editingDebt.id}`, submitData)
+        await api.put(`/api/debts/${editingDebt.id}`, submitData)
         toast.success('Borç güncellendi')
       } else {
-        await api.post('/debts', submitData)
+        await api.post('/api/debts', submitData)
         toast.success('Borç kaydı oluşturuldu')
       }
       setShowModal(false)
@@ -90,7 +90,7 @@ export default function Debts() {
   const handlePayment = async (e) => {
     e.preventDefault()
     try {
-      await api.post(`/debts/${payingDebt.id}/payment`, {
+      await api.post(`/api/debts/${payingDebt.id}/payment`, {
         payment_amount: parseFloat(paymentAmount)
       })
       toast.success(payingDebt.type === 'payable' ? 'Ödeme yapıldı' : 'Tahsilat yapıldı')
@@ -107,7 +107,7 @@ export default function Debts() {
     if (!confirm('Bu borç kaydını silmek istediğinizden emin misiniz?')) return
 
     try {
-      await api.delete(`/debts/${id}`)
+      await api.delete(`/api/debts/${id}`)
       toast.success('Borç silindi')
       fetchData()
     } catch (error) {

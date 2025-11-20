@@ -18,7 +18,7 @@ export const useAuthStore = create(
       login: async (email, password) => {
         set({ isLoading: true })
         try {
-          const response = await api.post('/auth/login', { email, password })
+          const response = await api.post('/api/auth/login', { email, password })
           const { user, token } = response.data.data
 
           set({ user, token, isLoading: false })
@@ -36,7 +36,7 @@ export const useAuthStore = create(
       register: async (name, email, password) => {
         set({ isLoading: true })
         try {
-          const response = await api.post('/auth/register', { name, email, password })
+          const response = await api.post('/api/auth/register', { name, email, password })
           const { user, token } = response.data.data
 
           set({ user, token, isLoading: false })
@@ -65,7 +65,7 @@ export const useAuthStore = create(
       updateProfile: async (data) => {
         set({ isLoading: true })
         try {
-          const response = await api.put('/auth/update', data)
+          const response = await api.put('/api/auth/update', data)
           const user = response.data.data
 
           set({ user, isLoading: false })
@@ -83,7 +83,7 @@ export const useAuthStore = create(
       changePassword: async (currentPassword, newPassword) => {
         set({ isLoading: true })
         try {
-          await api.put('/auth/change-password', { currentPassword, newPassword })
+          await api.put('/api/auth/change-password', { currentPassword, newPassword })
           set({ isLoading: false })
           toast.success('Şifre değiştirildi')
           return true

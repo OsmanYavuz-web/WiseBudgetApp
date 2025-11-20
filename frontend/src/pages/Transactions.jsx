@@ -47,9 +47,9 @@ export default function Transactions() {
   const fetchData = async () => {
     try {
       const [transRes, accRes, catRes] = await Promise.all([
-        api.get('/transactions'),
-        api.get('/accounts'),
-        api.get('/categories')
+        api.get('/api/transactions'),
+        api.get('/api/accounts'),
+        api.get('/api/categories')
       ])
       setTransactions(transRes.data.data)
       setAccounts(accRes.data.data)
@@ -132,10 +132,10 @@ export default function Transactions() {
     
     try {
       if (editingTransaction) {
-        await api.put(`/transactions/${editingTransaction.id}`, formData)
+        await api.put(`/api/transactions/${editingTransaction.id}`, formData)
         toast.success('İşlem güncellendi')
       } else {
-        await api.post('/transactions', formData)
+        await api.post('/api/transactions', formData)
         toast.success('İşlem eklendi')
       }
       setShowModal(false)
@@ -160,7 +160,7 @@ export default function Transactions() {
     if (!confirm('Bu işlemi silmek istediğinizden emin misiniz?')) return
     
     try {
-      await api.delete(`/transactions/${id}`)
+      await api.delete(`/api/transactions/${id}`)
       toast.success('İşlem silindi')
       fetchData()
     } catch (error) {

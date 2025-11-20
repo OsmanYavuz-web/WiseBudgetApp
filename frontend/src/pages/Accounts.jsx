@@ -30,7 +30,7 @@ export default function Accounts() {
 
   const fetchAccounts = async () => {
     try {
-      const response = await api.get('/accounts')
+      const response = await api.get('/api/accounts')
       setAccounts(response.data.data)
     } catch (error) {
       toast.error('Hesaplar yüklenemedi')
@@ -73,10 +73,10 @@ export default function Accounts() {
       }
 
       if (editingAccount) {
-        await api.put(`/accounts/${editingAccount.id}`, submitData)
+        await api.put(`/api/accounts/${editingAccount.id}`, submitData)
         toast.success('Hesap güncellendi')
       } else {
-        await api.post('/accounts', submitData)
+        await api.post('/api/accounts', submitData)
         toast.success('Hesap oluşturuldu')
       }
       setShowModal(false)
@@ -91,7 +91,7 @@ export default function Accounts() {
     if (!confirm('Bu hesabı silmek istediğinizden emin misiniz?')) return
     
     try {
-      await api.delete(`/accounts/${id}`)
+      await api.delete(`/api/accounts/${id}`)
       toast.success('Hesap silindi')
       fetchAccounts()
     } catch (error) {
