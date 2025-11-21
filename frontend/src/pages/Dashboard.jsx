@@ -11,8 +11,11 @@ import {
   FiUsers
 } from 'react-icons/fi'
 import { formatCurrency, formatDate } from '../utils/helpers'
+import { useAuthStore } from '../store/authStore'
 
 export default function Dashboard() {
+  const { user } = useAuthStore()
+  const userCurrency = user?.currency || 'TRY'
   const [accounts, setAccounts] = useState([])
   const [categories, setCategories] = useState([])
   const [recentTransactions, setRecentTransactions] = useState([])
@@ -124,7 +127,7 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Gösterge Paneli</h1>
           <p className="text-gray-600 mt-1">Finansal durumunuza genel bakış</p>
         </div>
         <button
@@ -145,7 +148,7 @@ export default function Dashboard() {
             <FiDollarSign className="text-primary-200" size={24} />
           </div>
           <p className="text-3xl font-bold mb-2">
-            {formatCurrency(totalBalance)}
+            {formatCurrency(totalBalance, userCurrency)}
           </p>
           <p className="text-sm text-primary-100">
             {accounts.length} hesap
@@ -159,7 +162,7 @@ export default function Dashboard() {
             <FiArrowUpRight className="text-green-200" size={24} />
           </div>
           <p className="text-3xl font-bold mb-2">
-            {formatCurrency(thisMonthIncome)}
+            {formatCurrency(thisMonthIncome, userCurrency)}
           </p>
           <p className="text-sm text-green-100">
             {thisMonthTransactions.filter(t => t.type === 'income').length} işlem
@@ -173,7 +176,7 @@ export default function Dashboard() {
             <FiArrowDownRight className="text-red-200" size={24} />
           </div>
           <p className="text-3xl font-bold mb-2">
-            {formatCurrency(thisMonthExpense)}
+            {formatCurrency(thisMonthExpense, userCurrency)}
           </p>
           <p className="text-sm text-red-100">
             {thisMonthTransactions.filter(t => t.type === 'expense').length} işlem
@@ -191,7 +194,7 @@ export default function Dashboard() {
               <FiUsers className="text-emerald-200" size={24} />
             </div>
             <p className="text-3xl font-bold mb-2">
-              {formatCurrency(debtSummary.receivables.total)}
+              {formatCurrency(debtSummary.receivables.total, userCurrency)}
             </p>
             <div className="flex items-center gap-4 text-sm text-emerald-100">
               <span>{debtSummary.receivables.count} kişi</span>
@@ -210,7 +213,7 @@ export default function Dashboard() {
               <FiUsers className="text-orange-200" size={24} />
             </div>
             <p className="text-3xl font-bold mb-2">
-              {formatCurrency(debtSummary.payables.total)}
+              {formatCurrency(debtSummary.payables.total, userCurrency)}
             </p>
             <div className="flex items-center gap-4 text-sm text-orange-100">
               <span>{debtSummary.payables.count} kişi</span>

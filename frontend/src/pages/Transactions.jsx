@@ -4,8 +4,11 @@ import toast from 'react-hot-toast'
 import { FiPlus, FiFilter, FiEdit2, FiTrash2 } from 'react-icons/fi'
 import { formatCurrency, formatDate, transactionTypeLabels } from '../utils/helpers'
 import CurrencyInput from '../components/CurrencyInput'
+import { useAuthStore } from '../store/authStore'
 
 export default function Transactions() {
+  const { user } = useAuthStore()
+  const userCurrency = user?.currency || 'TRY'
   const [transactions, setTransactions] = useState([])
   const [filteredTransactions, setFilteredTransactions] = useState([])
   const [accounts, setAccounts] = useState([])
@@ -313,7 +316,7 @@ export default function Transactions() {
                       'text-blue-600'
                     }`}>
                       {transaction.type === 'income' ? '+' : '-'}
-                      {formatCurrency(transaction.amount)}
+                      {formatCurrency(transaction.amount, transaction.account?.currency || userCurrency)}
                     </td>
                     <td className="py-3 px-4 text-right">
                       <div className="flex items-center justify-end gap-2">

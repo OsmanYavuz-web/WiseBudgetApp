@@ -4,8 +4,11 @@ import toast from 'react-hot-toast'
 import { FiPlus, FiEdit2, FiTrash2, FiCreditCard } from 'react-icons/fi'
 import { formatCurrency, accountTypeLabels } from '../utils/helpers'
 import CurrencyInput from '../components/CurrencyInput'
+import { useAuthStore } from '../store/authStore'
 
 export default function Accounts() {
+  const { user } = useAuthStore()
+  const userCurrency = user?.currency || 'TRY'
   const [accounts, setAccounts] = useState([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
@@ -203,7 +206,7 @@ export default function Accounts() {
                         {isCreditCard ? 'Borç' : 'Kullanılan'}
                       </p>
                       <p className={`text-2xl font-bold ${isDebt ? 'text-red-600' : 'text-green-600'}`}>
-                        {isDebt ? formatCurrency(Math.abs(balance), account.currency) : '0 TL'}
+                        {isDebt ? formatCurrency(Math.abs(balance), account.currency) : formatCurrency(0, account.currency)}
                       </p>
                     </div>
 
@@ -358,8 +361,8 @@ export default function Accounts() {
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                     <p className="text-sm text-blue-800">
                       {formData.type === 'credit_card' 
-                        ? '💳 Kredi kartı için başlangıç bakiyesi 0 TL olmalıdır. Harcama yaptıkça borç olarak görünecektir.'
-                        : '📋 Açık hesap (KMH) için başlangıç bakiyesi 0 TL olmalıdır. Alım yaptıkça borç olarak görünecektir.'}
+                        ? `💳 Kredi kartı için başlangıç bakiyesi ${formatCurrency(0, userCurrency)} olmalıdır. Harcama yaptıkça borç olarak görünecektir.`
+                        : `📋 Açık hesap (KMH) için başlangıç bakiyesi ${formatCurrency(0, userCurrency)} olmalıdır. Alım yaptıkça borç olarak görünecektir.`}
                     </p>
                   </div>
 

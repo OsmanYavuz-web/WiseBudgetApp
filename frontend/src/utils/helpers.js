@@ -1,4 +1,20 @@
 /**
+ * Para birimi sembolleri
+ */
+export const currencySymbols = {
+  TRY: '₺',
+  USD: '$',
+  EUR: '€',
+  GBP: '£',
+  JPY: '¥',
+  CNY: '¥',
+  INR: '₹',
+  BRL: 'R$',
+  CAD: 'C$',
+  AUD: 'A$'
+}
+
+/**
  * Para birimi formatla
  */
 export const formatCurrency = (amount, currency = 'TRY') => {

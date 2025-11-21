@@ -1,5 +1,6 @@
-import React from 'react';
-import CurrencyInputField from 'react-currency-input-field';
+import { NumericFormat } from 'react-number-format';
+import { useAuthStore } from '../store/authStore';
+import { currencySymbols } from '../utils/helpers';
 
 /**
  * Para girişi için özelleştirilmiş input component'i
@@ -9,7 +10,8 @@ import CurrencyInputField from 'react-currency-input-field';
  * @param {string|number} value - Input değeri
  * @param {function} onChange - Değer değiştiğinde çağrılacak fonksiyon
  * @param {string} placeholder - Placeholder metni
- * @param {string} prefix - Para birimi öneki (varsayılan: ₺)
+ * @param {string} prefix - Para birimi öneki (varsayılan: kullanıcının seçtiği para birimi)
+ * @param {string} currency - Para birimi kodu (TRY, USD, EUR vb.) - prefix'i override eder
  * @param {boolean} required - Zorunlu alan mı?
  * @param {boolean} disabled - Devre dışı mı?
  * @param {string} className - Ek CSS sınıfları
@@ -21,7 +23,8 @@ const CurrencyInput = ({
   value,
   onChange,
   placeholder = '0,00',
-  prefix = '₺ ',
+  prefix,
+  currency,
   required = false,
   disabled = false,
   className = '',
@@ -30,20 +33,32 @@ const CurrencyInput = ({
   allowNegativeValue = false,
   ...props
 }) => {
+  const { user } = useAuthStore();
+  
+  // Para birimi prefix'ini belirle
+  // Önce currency prop'u, sonra prefix prop'u, en son kullanıcının seçtiği para birimi
+  const getPrefix = () => {
+    if (prefix !== undefined) return prefix;
+    if (currency) return `${currencySymbols[currency] || currency} `;
+    const userCurrency = user?.currency || 'TRY';
+    return `${currencySymbols[userCurrency] || '₺'} `;
+  };
+  
+  const displayPrefix = getPrefix();
   /**
    * Değer değiştiğinde çağrılır
-   * @param {string} value - Formatlanmış değer
-   * @param {string} name - Input adı
-   * @param {object} values - Tüm değerler (float, formatted, value)
+   * @param {object} values - Formatlanmış değer ve float değer
    */
-  const handleValueChange = (value, name, values) => {
+  const handleValueChange = (values) => {
+    const { formattedValue, floatValue } = values;
+    
     // onChange fonksiyonuna hem formatlanmış hem de float değeri gönder
     if (onChange) {
       onChange({
         target: {
           name,
-          value: values?.float || 0, // Float değer (hesaplamalar için)
-          formattedValue: value, // Formatlanmış değer (gösterim için)
+          value: floatValue !== undefined && floatValue !== null ? floatValue : '', // Float değer (hesaplamalar için), boş ise boş string
+          formattedValue: formattedValue, // Formatlanmış değer (gösterim için)
         }
       });
     }
@@ -61,16 +76,18 @@ const CurrencyInput = ({
         </label>
       )}
       
-      <CurrencyInputField
+      <NumericFormat
         id={name}
         name={name}
-        value={value}
+        value={value !== undefined && value !== null && value !== '' ? value : undefined}
         placeholder={placeholder}
-        prefix={prefix}
-        decimalsLimit={decimalsLimit}
+        prefix={displayPrefix}
         decimalSeparator=","
-        groupSeparator="."
-        allowNegativeValue={allowNegativeValue}
+        thousandSeparator="."
+        decimalScale={decimalsLimit}
+        fixedDecimalScale={false}
+        allowNegative={allowNegativeValue}
+        allowedDecimalSeparators={[',', '.']}
         disabled={disabled}
         onValueChange={handleValueChange}
         className={`
@@ -90,4 +107,3 @@ const CurrencyInput = ({
 };
 
 export default CurrencyInput;
-

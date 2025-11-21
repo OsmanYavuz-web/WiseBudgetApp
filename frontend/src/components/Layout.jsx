@@ -23,7 +23,7 @@ export default function Layout() {
   }
 
   const menuItems = [
-    { path: '/dashboard', icon: FiHome, label: 'Dashboard' },
+    { path: '/dashboard', icon: FiHome, label: 'Gösterge Paneli' },
     { path: '/accounts', icon: FiCreditCard, label: 'Hesaplar' },
     { path: '/transactions', icon: FiTrendingUp, label: 'İşlemler' },
     { path: '/debts', icon: FiUsers, label: 'Alacak/Verecek' }

@@ -4,8 +4,11 @@ import toast from 'react-hot-toast'
 import { FiPlus, FiEdit2, FiTrash2, FiDollarSign, FiAlertCircle, FiCheckCircle } from 'react-icons/fi'
 import { formatCurrency, formatDate } from '../utils/helpers'
 import CurrencyInput from '../components/CurrencyInput'
+import { useAuthStore } from '../store/authStore'
 
 export default function Debts() {
+  const { user } = useAuthStore()
+  const userCurrency = user?.currency || 'TRY'
   const [debts, setDebts] = useState([])
   const [summary, setSummary] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -191,7 +194,7 @@ export default function Debts() {
               <FiDollarSign className="text-green-200" size={24} />
             </div>
             <p className="text-3xl font-bold mb-2">
-              {formatCurrency(summary.receivables.total)}
+              {formatCurrency(summary.receivables.total, userCurrency)}
             </p>
             <div className="flex items-center gap-4 text-sm text-green-100">
               <span>{summary.receivables.count} kişi</span>
@@ -210,7 +213,7 @@ export default function Debts() {
               <FiDollarSign className="text-red-200" size={24} />
             </div>
             <p className="text-3xl font-bold mb-2">
-              {formatCurrency(summary.payables.total)}
+              {formatCurrency(summary.payables.total, userCurrency)}
             </p>
             <div className="flex items-center gap-4 text-sm text-red-100">
               <span>{summary.payables.count} kişi</span>
@@ -229,7 +232,7 @@ export default function Debts() {
               <FiDollarSign className="text-white opacity-75" size={24} />
             </div>
             <p className="text-3xl font-bold mb-2">
-              {formatCurrency(Math.abs(summary.net_balance))}
+              {formatCurrency(Math.abs(summary.net_balance), userCurrency)}
             </p>
             <p className="text-sm opacity-90">
               {summary.net_balance >= 0 ? 'Alacak fazlası' : 'Verecek fazlası'}
@@ -317,15 +320,15 @@ export default function Debts() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                     <div>
                       <p className="text-gray-500">Toplam Tutar</p>
-                      <p className="font-semibold text-gray-900">{formatCurrency(debt.amount)}</p>
+                      <p className="font-semibold text-gray-900">{formatCurrency(debt.amount, userCurrency)}</p>
                     </div>
                     <div>
                       <p className="text-gray-500">Ödenen</p>
-                      <p className="font-semibold text-green-600">{formatCurrency(debt.paid_amount)}</p>
+                      <p className="font-semibold text-green-600">{formatCurrency(debt.paid_amount, userCurrency)}</p>
                     </div>
                     <div>
                       <p className="text-gray-500">Kalan</p>
-                      <p className="font-semibold text-red-600">{formatCurrency(debt.remaining_amount)}</p>
+                      <p className="font-semibold text-red-600">{formatCurrency(debt.remaining_amount, userCurrency)}</p>
                     </div>
                     <div>
                       <p className="text-gray-500">Vade Tarihi</p>
@@ -482,7 +485,7 @@ export default function Debts() {
                     className="mb-0"
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    Kalan: {formatCurrency((parseFloat(formData.amount) || 0) - (parseFloat(formData.paid_amount) || 0))}
+                    Kalan: {formatCurrency((parseFloat(formData.amount) || 0) - (parseFloat(formData.paid_amount) || 0), userCurrency)}
                   </p>
                 </div>
               </div>
@@ -572,7 +575,7 @@ export default function Debts() {
               <p className="font-semibold text-gray-900">{payingDebt.person_name}</p>
               <p className="text-sm text-gray-600 mt-2">Kalan Borç</p>
               <p className="text-2xl font-bold text-red-600">
-                {formatCurrency(payingDebt.remaining_amount)}
+                {formatCurrency(payingDebt.remaining_amount, userCurrency)}
               </p>
             </div>
 
